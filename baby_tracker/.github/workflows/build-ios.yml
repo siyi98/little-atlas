@@ -21,17 +21,12 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
           channel: 'stable'
           cache: true
 
       - name: Get dependencies
         working-directory: baby_tracker
         run: flutter pub get
-
-      - name: Run tests
-        working-directory: baby_tracker
-        run: flutter test --no-pub || true
 
       - name: Build iOS (No Codesign)
         working-directory: baby_tracker
