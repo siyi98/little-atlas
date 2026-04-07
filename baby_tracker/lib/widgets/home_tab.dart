@@ -52,7 +52,7 @@ class HomeTab extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    '宝贝成长记',
+                    'Little Atlas',
                     style: GoogleFonts.notoSansSc(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,

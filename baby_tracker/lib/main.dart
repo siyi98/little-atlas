@@ -36,7 +36,7 @@ class BabyTrackerApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DiaryProvider()),
       ],
       child: MaterialApp(
-        title: '宝贝成长记',
+        title: 'Little Atlas',
         debugShowCheckedModeBanner: false,
         theme: AppTheme.lightTheme,
         home: const SplashScreen(),

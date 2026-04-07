@@ -1,4 +1,4 @@
-# 宝贝成长记 (Baby Growth Tracker)
+# Little Atlas
 
 一款精美温馨的宝宝成长记录应用，支持 Android 和 iOS 双平台。
 

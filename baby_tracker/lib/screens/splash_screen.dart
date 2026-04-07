@@ -122,7 +122,7 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                       const SizedBox(height: 24),
                       Text(
-                        '宝贝成长记',
+                        'Little Atlas',
                         style: GoogleFonts.notoSansSc(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,

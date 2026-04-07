@@ -112,7 +112,7 @@ class _AddBabyScreenState extends State<AddBabyScreen> {
                         const Text('👶', style: TextStyle(fontSize: 60)),
                         const SizedBox(height: 16),
                         Text(
-                          widget.isFirstBaby ? '欢迎使用宝贝成长记' : '添加宝宝',
+                          widget.isFirstBaby ? '欢迎使用 Little Atlas' : '添加宝宝',
                           style: GoogleFonts.notoSansSc(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
