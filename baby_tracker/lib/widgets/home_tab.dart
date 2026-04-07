@@ -329,6 +329,7 @@ class HomeTab extends StatelessWidget {
   Widget _buildGrowthSummary(BuildContext context, BabyProvider babyProvider) {
     final records = babyProvider.growthRecords;
     final latestRecord = records.isNotEmpty ? records.last : null;
+    final baby = babyProvider.currentBaby;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
@@ -349,7 +350,11 @@ class HomeTab extends StatelessWidget {
               Expanded(
                 child: _buildStatCard(
                   '身高',
-                  latestRecord?.height != null ? '${latestRecord!.height} cm' : '--',
+                  latestRecord?.height != null
+                      ? '${latestRecord!.height} cm'
+                      : baby?.birthHeight != null
+                          ? '${baby!.birthHeight} cm'
+                          : '--',
                   Icons.straighten,
                   AppColors.babyBlue,
                 ),
@@ -358,7 +363,11 @@ class HomeTab extends StatelessWidget {
               Expanded(
                 child: _buildStatCard(
                   '体重',
-                  latestRecord?.weight != null ? '${latestRecord!.weight} kg' : '--',
+                  latestRecord?.weight != null
+                      ? '${latestRecord!.weight} kg'
+                      : baby?.birthWeight != null
+                          ? '${baby!.birthWeight} kg'
+                          : '--',
                   Icons.monitor_weight_outlined,
                   AppColors.babyPink,
                 ),

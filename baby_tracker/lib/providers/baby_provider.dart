@@ -67,6 +67,21 @@ class BabyProvider extends ChangeNotifier {
     if (_currentBaby == null) {
       _currentBaby = baby;
     }
+
+    // Auto-create first growth record from birth data
+    if (birthWeight != null || birthHeight != null) {
+      final record = GrowthRecord(
+        id: _uuid.v4(),
+        babyId: baby.id,
+        date: birthday,
+        weight: birthWeight,
+        height: birthHeight,
+        notes: '出生记录',
+      );
+      await _db.insertGrowthRecord(record.toMap());
+      _growthRecords.add(record);
+    }
+
     notifyListeners();
   }
 
