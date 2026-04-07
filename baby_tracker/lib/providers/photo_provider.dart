@@ -10,10 +10,16 @@ class PhotoProvider extends ChangeNotifier {
   bool _hasMore = true;
   static const int _pageSize = 50;
 
+  DateTime? _filterStart;
+  DateTime? _filterEnd;
+
   List<AssetEntity> get photos => _photos;
   bool get isLoading => _isLoading;
   bool get hasPermission => _hasPermission;
   bool get hasMore => _hasMore;
+  DateTime? get filterStart => _filterStart;
+  DateTime? get filterEnd => _filterEnd;
+  bool get hasFilter => _filterStart != null || _filterEnd != null;
 
   Map<String, List<AssetEntity>> get photosByMonth {
     final Map<String, List<AssetEntity>> grouped = {};
@@ -23,6 +29,18 @@ class PhotoProvider extends ChangeNotifier {
       grouped[key]!.add(photo);
     }
     return grouped;
+  }
+
+  void setDateFilter({DateTime? start, DateTime? end}) {
+    _filterStart = start;
+    _filterEnd = end;
+    loadPhotos(refresh: true);
+  }
+
+  void clearFilter() {
+    _filterStart = null;
+    _filterEnd = null;
+    loadPhotos(refresh: true);
   }
 
   Future<bool> requestPermission() async {
@@ -51,11 +69,17 @@ class PhotoProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      final filterGroup = FilterOptionGroup(
+        orders: [const OrderOption(type: OrderOptionType.createDate, asc: false)],
+        createTimeCond: DateTimeCond(
+          min: _filterStart ?? DateTime(2000),
+          max: _filterEnd ?? DateTime.now(),
+        ),
+      );
+
       final List<AssetPathEntity> albums = await PhotoManager.getAssetPathList(
         type: RequestType.image,
-        filterOption: FilterOptionGroup(
-          orders: [const OrderOption(type: OrderOptionType.createDate, asc: false)],
-        ),
+        filterOption: filterGroup,
       );
 
       if (albums.isEmpty) {

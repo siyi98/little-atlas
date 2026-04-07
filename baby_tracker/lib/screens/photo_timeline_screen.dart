@@ -40,6 +40,44 @@ class _PhotoTimelineScreenState extends State<PhotoTimelineScreen> {
     super.dispose();
   }
 
+  Future<void> _showDateFilter(BuildContext context) async {
+    final provider = Provider.of<PhotoProvider>(context, listen: false);
+    final now = DateTime.now();
+
+    final picked = await showDateRangePicker(
+      context: context,
+      firstDate: DateTime(2010),
+      lastDate: now,
+      initialDateRange: provider.hasFilter
+          ? DateTimeRange(
+              start: provider.filterStart ?? DateTime(2010),
+              end: provider.filterEnd ?? now,
+            )
+          : null,
+      locale: const Locale('zh', 'CN'),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppColors.primary,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: AppColors.textPrimary,
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      provider.setDateFilter(
+        start: picked.start,
+        end: DateTime(picked.end.year, picked.end.month, picked.end.day, 23, 59, 59),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -49,6 +87,7 @@ class _PhotoTimelineScreenState extends State<PhotoTimelineScreen> {
         child: Column(
           children: [
             _buildHeader(),
+            _buildFilterBar(),
             Expanded(
               child: Consumer<PhotoProvider>(
                 builder: (context, photoProvider, _) {
@@ -61,7 +100,7 @@ class _PhotoTimelineScreenState extends State<PhotoTimelineScreen> {
                   }
 
                   if (photoProvider.photos.isEmpty) {
-                    return _buildEmptyState();
+                    return _buildEmptyState(photoProvider);
                   }
 
                   return _buildPhotoTimeline(photoProvider);
@@ -76,7 +115,7 @@ class _PhotoTimelineScreenState extends State<PhotoTimelineScreen> {
 
   Widget _buildHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 0),
       child: Row(
         children: [
           Text(
@@ -96,6 +135,93 @@ class _PhotoTimelineScreenState extends State<PhotoTimelineScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildFilterBar() {
+    return Consumer<PhotoProvider>(
+      builder: (context, provider, _) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => _showDateFilter(context),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: provider.hasFilter
+                        ? AppColors.primary.withOpacity(0.1)
+                        : Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: provider.hasFilter ? AppColors.primary : AppColors.divider,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.date_range_rounded,
+                        size: 16,
+                        color: provider.hasFilter ? AppColors.primary : AppColors.textSecondary,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        provider.hasFilter
+                            ? '${DateFormat('yy/M/d').format(provider.filterStart!)} - ${DateFormat('yy/M/d').format(provider.filterEnd!)}'
+                            : '筛选时间',
+                        style: GoogleFonts.notoSansSc(
+                          fontSize: 13,
+                          color: provider.hasFilter ? AppColors.primary : AppColors.textSecondary,
+                          fontWeight: provider.hasFilter ? FontWeight.w600 : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              if (provider.hasFilter) ...[
+                const SizedBox(width: 8),
+                GestureDetector(
+                  onTap: () => provider.clearFilter(),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: AppColors.error.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.close_rounded, size: 14, color: AppColors.error),
+                        const SizedBox(width: 4),
+                        Text(
+                          '清除',
+                          style: GoogleFonts.notoSansSc(
+                            fontSize: 12,
+                            color: AppColors.error,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+              const Spacer(),
+              if (provider.photos.isNotEmpty)
+                Text(
+                  '${provider.photos.length} 张',
+                  style: GoogleFonts.notoSansSc(
+                    fontSize: 12,
+                    color: AppColors.textLight,
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 
@@ -164,7 +290,7 @@ class _PhotoTimelineScreenState extends State<PhotoTimelineScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(PhotoProvider provider) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -172,7 +298,7 @@ class _PhotoTimelineScreenState extends State<PhotoTimelineScreen> {
           const Text('📷', style: TextStyle(fontSize: 60)),
           const SizedBox(height: 16),
           Text(
-            '还没有照片',
+            provider.hasFilter ? '该时间段没有照片' : '还没有照片',
             style: GoogleFonts.notoSansSc(
               fontSize: 18,
               fontWeight: FontWeight.w600,
@@ -181,12 +307,20 @@ class _PhotoTimelineScreenState extends State<PhotoTimelineScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            '快去拍照记录宝宝的成长吧',
+            provider.hasFilter ? '试试调整筛选范围' : '快去拍照记录宝宝的成长吧',
             style: GoogleFonts.notoSansSc(
               fontSize: 14,
               color: AppColors.textLight,
             ),
           ),
+          if (provider.hasFilter) ...[
+            const SizedBox(height: 20),
+            TextButton.icon(
+              onPressed: () => provider.clearFilter(),
+              icon: const Icon(Icons.filter_alt_off_rounded, size: 18),
+              label: const Text('清除筛选'),
+            ),
+          ],
         ],
       ),
     );
@@ -198,7 +332,7 @@ class _PhotoTimelineScreenState extends State<PhotoTimelineScreen> {
 
     return ListView.builder(
       controller: _scrollController,
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
       itemCount: months.length + (provider.isLoading ? 1 : 0),
       itemBuilder: (context, index) {
         if (index >= months.length) {
