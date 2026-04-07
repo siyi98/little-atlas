@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,6 +7,7 @@ import 'package:intl/intl.dart';
 import '../providers/baby_provider.dart';
 import '../theme/app_theme.dart';
 import '../screens/home_screen.dart';
+import '../screens/edit_baby_screen.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
@@ -73,7 +75,14 @@ class HomeTab extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 20),
-              Row(
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => EditBabyScreen(baby: baby)),
+                  );
+                },
+                child: Row(
                 children: [
                   Container(
                     width: 80,
@@ -83,25 +92,36 @@ class HomeTab extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(color: Colors.white.withOpacity(0.5), width: 2),
                     ),
-                    child: Center(
-                      child: Text(
-                        baby.gender == 'boy' ? '👦' : '👧',
-                        style: const TextStyle(fontSize: 40),
-                      ),
-                    ),
+                    child: baby.avatarPath != null && File(baby.avatarPath!).existsSync()
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(18),
+                            child: Image.file(File(baby.avatarPath!), fit: BoxFit.cover, width: 80, height: 80),
+                          )
+                        : Center(
+                            child: Text(
+                              baby.gender == 'boy' ? '👦' : '👧',
+                              style: const TextStyle(fontSize: 40),
+                            ),
+                          ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          baby.name,
-                          style: GoogleFonts.notoSansSc(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                        Row(
+                          children: [
+                            Text(
+                              baby.name,
+                              style: GoogleFonts.notoSansSc(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Icon(Icons.edit_rounded, color: Colors.white.withOpacity(0.7), size: 16),
+                          ],
                         ),
                         const SizedBox(height: 4),
                         Text(
@@ -131,6 +151,7 @@ class HomeTab extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
               ),
             ],
           ),

@@ -100,6 +100,7 @@ class _GrowthScreenState extends State<GrowthScreen>
         controller: _tabController,
         labelColor: Colors.white,
         unselectedLabelColor: AppColors.textSecondary,
+        dividerColor: Colors.transparent,
         indicator: BoxDecoration(
           gradient: AppColors.primaryGradient,
           borderRadius: BorderRadius.circular(12),
@@ -107,6 +108,8 @@ class _GrowthScreenState extends State<GrowthScreen>
         indicatorSize: TabBarIndicatorSize.tab,
         labelStyle: GoogleFonts.notoSansSc(fontSize: 14, fontWeight: FontWeight.w600),
         unselectedLabelStyle: GoogleFonts.notoSansSc(fontSize: 14),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
+        splashFactory: NoSplash.splashFactory,
         tabs: const [
           Tab(text: '身高'),
           Tab(text: '体重'),
