@@ -115,6 +115,11 @@ class _DiaryScreenState extends State<DiaryScreen> {
     );
   }
 
+  String _getWeekday(DateTime date) {
+    const weekdays = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+    return weekdays[date.weekday - 1];
+  }
+
   Widget _buildDiaryCard(BuildContext context, DiaryEntry entry, DiaryProvider provider) {
     final weatherIcons = {
       'sunny': '☀️',
@@ -193,7 +198,7 @@ class _DiaryScreenState extends State<DiaryScreen> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  DateFormat('EEEE', 'zh_CN').format(entry.date),
+                  _getWeekday(entry.date),
                   style: GoogleFonts.notoSansSc(
                     fontSize: 12,
                     color: AppColors.textLight,
@@ -222,26 +227,21 @@ class _DiaryScreenState extends State<DiaryScreen> {
               maxLines: 5,
               overflow: TextOverflow.ellipsis,
             ),
-            if (entry.photos.isNotEmpty) ...[
+            if (entry.photos.where((p) => p.isNotEmpty).isNotEmpty) ...[
               const SizedBox(height: 12),
-              SizedBox(
-                height: 60,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: entry.photos.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: 60,
-                      height: 60,
-                      margin: const EdgeInsets.only(right: 8),
-                      decoration: BoxDecoration(
-                        color: AppColors.divider,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(Icons.image, color: AppColors.textLight),
-                    );
-                  },
-                ),
+              Wrap(
+                spacing: 6,
+                children: entry.photos.where((p) => p.isNotEmpty).map((p) =>
+                  Container(
+                    width: 56,
+                    height: 56,
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Icon(Icons.image_rounded, color: AppColors.primary, size: 22),
+                  ),
+                ).toList(),
               ),
             ],
           ],

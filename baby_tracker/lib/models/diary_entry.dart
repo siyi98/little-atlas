@@ -40,7 +40,7 @@ class DiaryEntry {
       content: map['content'],
       mood: map['mood'],
       photos: map['photos'] != null && map['photos'].toString().isNotEmpty
-          ? map['photos'].toString().split(',')
+          ? map['photos'].toString().split(',').where((p) => p.isNotEmpty).toList()
           : [],
       weather: map['weather'],
       createdAt: DateTime.parse(map['createdAt']),
