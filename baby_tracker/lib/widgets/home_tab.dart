@@ -8,6 +8,7 @@ import '../providers/baby_provider.dart';
 import '../theme/app_theme.dart';
 import '../screens/home_screen.dart';
 import '../screens/edit_baby_screen.dart';
+import '../screens/milestone_screen.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
@@ -162,9 +163,9 @@ class HomeTab extends StatelessWidget {
 
   Widget _buildQuickActions(BuildContext context) {
     final actions = [
-      {'icon': '📸', 'label': '拍照记录', 'color': AppColors.babyPink, 'index': 1},
-      {'icon': '📏', 'label': '记录成长', 'color': AppColors.babyBlue, 'index': 2},
-      {'icon': '🏆', 'label': '新里程碑', 'color': AppColors.peach, 'index': 3},
+      {'icon': '🍼', 'label': '日常记录', 'color': AppColors.babyPink, 'index': 1},
+      {'icon': '📸', 'label': '照片相册', 'color': AppColors.babyBlue, 'index': 2},
+      {'icon': '📏', 'label': '成长曲线', 'color': AppColors.peach, 'index': 3},
       {'icon': '📝', 'label': '写日记', 'color': AppColors.lavender, 'index': 4},
     ];
 
@@ -247,8 +248,8 @@ class HomeTab extends StatelessWidget {
               if (milestones.isNotEmpty)
                 TextButton(
                   onPressed: () {
-                    final homeState = context.findAncestorStateOfType<HomeScreenState>();
-                    homeState?.switchTab(3);
+                    Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const MilestoneScreen()));
                   },
                   child: Text(
                     '查看全部',

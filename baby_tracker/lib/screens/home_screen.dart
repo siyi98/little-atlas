@@ -8,6 +8,7 @@ import '../providers/diary_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/home_tab.dart';
 import 'photo_timeline_screen.dart';
+import 'daily_care_screen.dart';
 import 'growth_screen.dart';
 import 'milestone_screen.dart';
 import 'diary_screen.dart';
@@ -30,9 +31,9 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final screens = [
       const HomeTab(),
+      const DailyCareScreen(),
       const PhotoTimelineScreen(),
       const GrowthScreen(),
-      const MilestoneScreen(),
       const DiaryScreen(),
     ];
 
@@ -54,14 +55,14 @@ class HomeScreenState extends State<HomeScreen> {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 _buildNavItem(0, Icons.home_rounded, '首页'),
-                _buildNavItem(1, Icons.photo_library_rounded, '相册'),
-                _buildNavItem(2, Icons.show_chart_rounded, '成长'),
-                _buildNavItem(3, Icons.emoji_events_rounded, '里程碑'),
+                _buildNavItem(1, Icons.baby_changing_station_rounded, '日常'),
+                _buildNavItem(2, Icons.photo_library_rounded, '相册'),
+                _buildNavItem(3, Icons.show_chart_rounded, '成长'),
                 _buildNavItem(4, Icons.book_rounded, '日记'),
               ],
             ),
@@ -78,7 +79,7 @@ class HomeScreenState extends State<HomeScreen> {
       behavior: HitTestBehavior.opaque,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(12),

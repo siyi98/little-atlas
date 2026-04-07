@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'providers/baby_provider.dart';
 import 'providers/photo_provider.dart';
 import 'providers/diary_provider.dart';
+import 'providers/daily_care_provider.dart';
 import 'screens/splash_screen.dart';
 import 'theme/app_theme.dart';
 
@@ -34,6 +35,7 @@ class BabyTrackerApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => BabyProvider()),
         ChangeNotifierProvider(create: (_) => PhotoProvider()),
         ChangeNotifierProvider(create: (_) => DiaryProvider()),
+        ChangeNotifierProvider(create: (_) => DailyCareProvider()),
       ],
       child: MaterialApp(
         title: 'Little Atlas',
