@@ -29,7 +29,8 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file("littleatlas.jks")
+            val ksFile = rootProject.file("app/littleatlas.jks")
+            storeFile = ksFile
             storePassword = "littleatlas"
             keyAlias = "littleatlas"
             keyPassword = "littleatlas"
@@ -38,11 +39,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig = if (file("littleatlas.jks").exists()) {
-                signingConfigs.getByName("release")
-            } else {
-                signingConfigs.getByName("debug")
-            }
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }
