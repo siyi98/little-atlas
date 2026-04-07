@@ -42,6 +42,13 @@ jobs:
         working-directory: baby_tracker
         run: flutter build apk --split-per-abi --release
 
+      - name: Rename APKs
+        working-directory: baby_tracker/build/app/outputs/flutter-apk
+        run: |
+          for f in *.apk; do
+            mv "$f" "LittleAtlas-${f}"
+          done
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
