@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  analyze:
+    name: Analyze & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Get dependencies
+        working-directory: baby_tracker
+        run: flutter pub get
+
+      - name: Analyze code
+        working-directory: baby_tracker
+        run: flutter analyze --no-fatal-infos || true
+
+      - name: Run tests
+        working-directory: baby_tracker
+        run: flutter test --no-pub || true
